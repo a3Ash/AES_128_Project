@@ -1,4 +1,4 @@
-from aes_decrypt import inv_sub_bytes
+from aes_decrypt import inv_sub_bytes, inv_shift_rows
 
 SBOX = [(i + 1) % 256 for i in range(256)]
 
@@ -42,3 +42,40 @@ for i in range(256):
     assert INV_SBOX[SBOX[i]] == i
 
 print("SUCCESS: All 256 Mappings Verified!")
+
+
+
+# =====================================
+# Test InvShiftRows
+# =====================================
+
+original_state = [
+    [0x00, 0x01, 0x02, 0x03],
+    [0x10, 0x11, 0x12, 0x13],
+    [0x20, 0x21, 0x22, 0x23],
+    [0x30, 0x31, 0x32, 0x33]
+]
+
+# Expected output
+expected_state = [
+    [0x00, 0x01, 0x02, 0x03],
+    [0x13, 0x10, 0x11, 0x12],
+    [0x22, 0x23, 0x20, 0x21],
+    [0x31, 0x32, 0x33, 0x30]
+]
+
+# Copy original state
+state = [row[:] for row in original_state]
+
+# Apply InvShiftRows
+inv_shift_rows(state)
+
+print("After InvShiftRows:")
+
+for row in state:
+    print(" ".join(f"{x:02X}" for x in row))
+
+# Verify
+assert state == expected_state
+
+print("\nSUCCESS: InvShiftRows Test Passed!")
